@@ -4,7 +4,8 @@ from wordpress_xmlrpc.compat import xmlrpc_client
 from wordpress_xmlrpc.methods import media, posts
 from secrets import WP_USER, WP_PW
 
-URL = 'http://www.marsfromspace.com/xmlrpc.php'
+url = 'http://www.marsfromspace.com/xmlrpc.php'
+WP = Client(url, WP_USER, WP_PW)
 
 def post_to_wordpress(title, content, more_info_url, local_img_file):
 
@@ -13,12 +14,11 @@ def post_to_wordpress(title, content, more_info_url, local_img_file):
         'name': local_img_file.split('/')[-1],
         'type': 'image/jpg',  # mimetype
     }
-    wp = Client(URL, WP_USER, WP_PW)
 
     # read the binary file and let the XMLRPC library encode it into base64
     with open(local_img_file, 'rb') as img:
         data['bits'] = xmlrpc_client.Binary(img.read())
-    response = wp.call(media.UploadFile(data))
+    response = WP.call(media.UploadFile(data))
     attachment_id = response['id']
 
     # now post the post and the image
@@ -29,4 +29,4 @@ def post_to_wordpress(title, content, more_info_url, local_img_file):
     post.post_status = 'publish'
     post.thumbnail = attachment_id
 
-    wp.call(NewPost(post))
+    WP.call(NewPost(post))
