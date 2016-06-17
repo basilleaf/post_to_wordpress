@@ -23,7 +23,7 @@ def post_to_wordpress(title, content, more_info_url, local_img_file):
 
     # now post the post and the image
     post = WordPressPost()
-    post.post_type = 'portfolio'  # stupid effing theme
+    post.post_type = 'portfolio'  # hack for the salmoncream theme
     post.title = title
     post.content = content
     post.post_status = 'publish'
